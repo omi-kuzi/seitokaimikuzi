@@ -33,10 +33,15 @@
             transform: scale(1.1);
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
         }
+        button:disabled {
+            background: silver;
+            cursor: not-allowed;
+        }
         #result {
             margin-top: 20px;
         }
         img {
+            max-width: 100%;
             width: 300px;
             height: auto;
             border-radius: 10px;
@@ -46,13 +51,18 @@
 </head>
 <body>
     <h1>豪華なくじ引き</h1>
-    <button onclick="drawLottery()">くじを引く</button>
+    <button onclick="drawLottery()" aria-label="くじを引く">くじを引く</button>
     <div id="result"></div>
 
     <script>
         function drawLottery() {
+            let button = document.querySelector("button");
+            button.disabled = true; // 連打防止
+            setTimeout(() => button.disabled = false, 1000); // 1秒後に解除
+
             let random = Math.random() * 100;
             let number;
+
             if (random < 6) number = 1;
             else if (random < 12) number = 2;
             else if (random < 18) number = 3;
@@ -69,13 +79,14 @@
             else if (random < 84) number = 14;
             else if (random < 90) number = 15;
             else if (random < 96) number = 16;
-            else if (random < 102) number = 17;
-            else if (random < 103) number = 18;
-            else if (random < 104) number = 19;
+            else if (random < 98) number = 17;
+            else if (random < 99) number = 18;
+            else if (random < 99.5) number = 19;
             else number = 20;
-            
+
             let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = `<img src="images/${number}.png" alt="くじの結果: ${number}">`;
+            resultDiv.innerHTML = `<img src="images/${number}.png" alt="くじの結果: ${number}" 
+                onerror="this.onerror=null; this.src='images/default.png';">`;
         }
     </script>
 </body>
