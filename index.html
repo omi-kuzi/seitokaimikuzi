@@ -34,12 +34,16 @@
             transform: scale(1.1);
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
         }
+        button:active {
+            transform: scale(0.95);
+        }
         button:disabled {
             background: silver;
             cursor: not-allowed;
         }
         #result {
             margin-top: 20px;
+            min-height: 50px;
         }
         .result-img {
             max-width: 100%;
@@ -47,36 +51,37 @@
             height: auto;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            display: none; /* 初期状態では非表示 */
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
         /* 右上のロゴ */
         .logo {
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 150px; /* ロゴのサイズ調整 */
+            width: 150px;
             height: auto;
-            opacity: 0.9; /* 透過して邪魔にならないように */
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
-    <!-- 右上のロゴ -->
-    <img src="images/logo.png" alt="浜松聖星高等学校おみくじロゴ" class="logo">
+    <!-- 右上のロゴ（docs フォルダから取得） -->
+    <img src="docs/logo.png" alt="浜松聖星高等学校おみくじロゴ" class="logo">
 
     <h1>生徒会くじ引き</h1>
     <button onclick="drawLottery()" aria-label="くじを引く">くじを引く</button>
-    <div id="result">
-        <img id="resultImage" class="result-img" src="" alt="くじの結果">
-    </div>
+    <div id="result">結果がここに表示されます</div>
 
     <script>
         function drawLottery() {
             let button = document.querySelector("button");
-            let resultImage = document.getElementById("resultImage");
-            
+            let resultDiv = document.getElementById("result");
+
             button.disabled = true; // 連打防止
             setTimeout(() => button.disabled = false, 1000); // 1秒後に解除
+
+            resultDiv.innerHTML = "Loading...";
 
             let random = Math.random() * 100;
             let number;
@@ -102,12 +107,19 @@
             else if (random < 99.5) number = 19;
             else number = 20;
 
-            // 画像の表示とエラーハンドリング
-            resultImage.src = `images/${number}.png`;
-            resultImage.style.display = "block";
-            resultImage.onerror = function() {
+            let img = new Image();
+            img.src = `docs/${number}.png`; // docs フォルダから画像を取得
+            img.classList.add("result-img");
+
+            img.onload = function() {
+                resultDiv.innerHTML = "";
+                resultDiv.appendChild(img);
+                img.style.opacity = "1"; // フェードイン
+            };
+
+            img.onerror = function() {
                 this.onerror = null;
-                this.src = 'images/default.png';
+                this.src = 'docs/default.png'; // エラー時にデフォルト画像を表示
             };
         }
     </script>
