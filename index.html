@@ -47,27 +47,16 @@
         }
         .result-img {
             max-width: 100%;
-            width: 300px;
+            width: 400px; /* 画像サイズを拡大 */
             height: auto;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             opacity: 0;
             transition: opacity 1s ease-in-out;
         }
-        /* 右上のロゴ */
-        .logo {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 150px;
-            height: auto;
-            opacity: 0.9;
-        }
     </style>
 </head>
 <body>
-    <!-- 右上のロゴ（docs フォルダから取得） -->
-    <img src="docs/logo.png" alt="浜松聖星高等学校おみくじロゴ" class="logo">
 
     <h1>生徒会くじ引き</h1>
     <button onclick="drawLottery()" aria-label="くじを引く">くじを引く</button>
