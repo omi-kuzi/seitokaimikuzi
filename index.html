@@ -15,6 +15,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
         h1 {
             font-size: 3rem;
@@ -40,23 +41,40 @@
         #result {
             margin-top: 20px;
         }
-        img {
+        .result-img {
             max-width: 100%;
             width: 300px;
             height: auto;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none; /* 初期状態では非表示 */
+        }
+        /* 右上のロゴ */
+        .logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 150px; /* ロゴのサイズ調整 */
+            height: auto;
+            opacity: 0.9; /* 透過して邪魔にならないように */
         }
     </style>
 </head>
 <body>
+    <!-- 右上のロゴ -->
+    <img src="images/logo.png" alt="浜松聖星高等学校おみくじロゴ" class="logo">
+
     <h1>生徒会くじ引き</h1>
     <button onclick="drawLottery()" aria-label="くじを引く">くじを引く</button>
-    <div id="result"></div>
+    <div id="result">
+        <img id="resultImage" class="result-img" src="" alt="くじの結果">
+    </div>
 
     <script>
         function drawLottery() {
             let button = document.querySelector("button");
+            let resultImage = document.getElementById("resultImage");
+            
             button.disabled = true; // 連打防止
             setTimeout(() => button.disabled = false, 1000); // 1秒後に解除
 
@@ -84,9 +102,13 @@
             else if (random < 99.5) number = 19;
             else number = 20;
 
-            let resultDiv = document.getElementById("result");
-            resultDiv.innerHTML = `<img src="images/${number}.png" alt="くじの結果: ${number}" 
-                onerror="this.onerror=null; this.src='images/default.png';">`;
+            // 画像の表示とエラーハンドリング
+            resultImage.src = `images/${number}.png`;
+            resultImage.style.display = "block";
+            resultImage.onerror = function() {
+                this.onerror = null;
+                this.src = 'images/default.png';
+            };
         }
     </script>
 </body>
