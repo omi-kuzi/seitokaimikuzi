@@ -12,14 +12,12 @@
         button:active { transform: scale(0.95); }
         button:disabled { background: silver; cursor: not-allowed; }
         
-        /* ローディングテキストのアニメーション */
+        /* ローディングアニメーション */
         .loading { font-size: 1.5rem; font-weight: bold; animation: blink 1s infinite; }
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-
-        /* ローディング中の回転インジケーター */
         .loading::after {
             content: " ";
             display: inline-block;
@@ -31,11 +29,14 @@
             border-top: 2px solid transparent;
             animation: spin 0.8s linear infinite;
         }
-
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+
+        /* 画像スタイル */
+        .result-img { max-width: 100%; width: 800px; height: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity 1s ease-in-out; }
+        .fade-in { opacity: 1 !important; }
     </style>
 </head>
 <body>
@@ -43,31 +44,44 @@
     <h1>生徒会くじ引き</h1>
     <button id="drawButton" data-max="20" onclick="drawLottery()" aria-label="くじを引く">くじを引く</button>
     <div id="result">結果がここに表示されます</div>
-    <div id="history"></div>
 
     <script>
+        function loadImage(src) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.classList.add("result-img");
+                img.onload = () => resolve(img);
+                img.onerror = () => {
+                    img.src = './docs/default.png';
+                    resolve(img);
+                };
+                img.src = src;
+            });
+        }
+
         async function drawLottery() {
             const button = document.getElementById("drawButton");
             const resultDiv = document.getElementById("result");
-            button.disabled = true; // ボタンを無効化（連打防止）
 
-            // ローディングテキストを表示
+            button.disabled = true; // 連打防止
+
+            // ローディングテキスト表示
             const loadingText = document.createElement("span");
             loadingText.classList.add("loading");
             loadingText.textContent = "Loading...";
             resultDiv.innerHTML = "";
             resultDiv.appendChild(loadingText);
 
-            // 1秒待機（くじ引き演出）
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1秒待機（演出）
 
-            // ランダムな数字を生成（1〜20）
             const maxNumber = parseInt(button.getAttribute("data-max"), 10) || 20;
             const number = Math.floor(Math.random() * maxNumber) + 1;
+            const img = await loadImage(`./docs/${number}.png`);
 
-            // 結果を表示
-            resultDiv.innerHTML = `結果: ${number}`;
-            
+            resultDiv.innerHTML = ""; // 結果表示をリセット
+            img.classList.add("fade-in"); // フェードインアニメーション追加
+            resultDiv.appendChild(img);
+
             button.disabled = false; // ボタンを有効化
         }
     </script>
