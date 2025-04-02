@@ -6,7 +6,7 @@
     <title>聖星☆みくじ</title>
     <style>
         body {
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(75, 0, 130, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, rgba(139, 0, 0, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
             text-align: center;
             color: white;
             font-family: "Times New Roman", serif;
@@ -18,29 +18,29 @@
             padding: 20px;
         }
         h1 {
-            font-size: 4rem;
-            text-shadow: 4px 4px 0px black, 6px 6px 12px rgba(255, 223, 0, 1), 0 0 25px rgba(255, 255, 255, 0.8);
-            color: gold;
+            font-size: 4.5rem;
+            text-shadow: 5px 5px 0px black, 7px 7px 15px rgba(255, 255, 255, 0.8);
+            color: #FFD700;
             padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             border-radius: 15px;
             display: inline-block;
         }
         button {
-            background: linear-gradient(145deg, #FFD700, #DAA520);
-            border: 2px solid #B8860B;
+            background: linear-gradient(145deg, #FF4500, #B22222);
+            border: 2px solid #8B0000;
             padding: 15px 30px;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             border-radius: 10px;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.3s;
-            color: black;
+            color: white;
             font-weight: bold;
-            text-shadow: 2px 2px 2px rgba(255, 255, 255, 0.7);
+            text-shadow: 2px 2px 3px black;
         }
         button:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 1);
+            box-shadow: 0 0 40px rgba(255, 69, 0, 1);
         }
         button:active {
             transform: scale(0.95);
@@ -50,21 +50,22 @@
             cursor: not-allowed;
         }
         #result {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: bold;
-            text-shadow: 2px 2px 5px black;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 10px;
+            text-shadow: 3px 3px 6px black;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
             border-radius: 10px;
             display: inline-block;
             margin-top: 20px;
+            color: #FFD700;
         }
         .result-img {
             max-width: 90%;
             width: 800px;
             height: auto;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 223, 0, 0.8);
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
             opacity: 0;
             transform: scale(0.95);
             transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
