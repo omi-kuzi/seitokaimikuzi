@@ -6,7 +6,7 @@
     <title>聖星☆みくじ</title>
     <style>
         body {
-            background: radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, rgba(139, 0, 0, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
+            background: radial-gradient(circle, rgba(255, 69, 0, 0.9) 0%, rgba(139, 0, 0, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
             text-align: center;
             color: white;
             font-family: "Times New Roman", serif;
@@ -16,6 +16,8 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
         h1 {
             font-size: 4.5rem;
@@ -71,13 +73,26 @@
             opacity: 1 !important;
             transform: scale(1) !important;
         }
+        .star {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: gold;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: float 5s infinite ease-in-out;
+            opacity: 0.8;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(15deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
     </style>
 </head>
 <body>
     <h1>聖星☆みくじ</h1>
     <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
     <div id="result">結果がここに表示されます</div>
-
     <script>
         async function loadImage(src) {
             return new Promise(resolve => {
@@ -105,6 +120,17 @@
             resultDiv.appendChild(img);
             setTimeout(() => button.disabled = false, 800);
         }
+        function createStars(count) {
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement("div");
+                star.classList.add("star");
+                star.style.left = Math.random() * 100 + "vw";
+                star.style.top = Math.random() * 100 + "vh";
+                star.style.animationDuration = Math.random() * 3 + 3 + "s";
+                document.body.appendChild(star);
+            }
+        }
+        createStars(30);
     </script>
 </body>
 </html>
