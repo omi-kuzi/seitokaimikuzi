@@ -1,179 +1,217 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聖星☆みくじ</title>
-    <style>
-        body {
-            background: radial-gradient(circle, rgba(255, 140, 0, 0.85) 0%, rgba(75, 0, 130, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
-            background-blend-mode: overlay;
-            text-align: center;
-            color: white;
-            font-family: 'Kosugi Maru', sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        h1 {
-            font-size: 5rem;
-            text-shadow: 3px 3px 0px black, 5px 5px 15px rgba(255, 255, 255, 0.7);
-            color: #FFF8DC;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-        }
-        button {
-            background: linear-gradient(145deg, #FFD700, #FF8C00);
-            border: 2px solid #FFA500;
-            padding: 18px 36px;
-            font-size: 1.8rem;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
-            color: white;
-            font-weight: bold;
-            text-shadow: 2px 2px 3px black;
-        }
-        button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.9);
-        }
-        button:active {
-            transform: scale(0.95);
-        }
-        button:disabled {
-            background: silver;
-            cursor: not-allowed;
-        }
-        #result {
-            font-size: 2rem;
-            font-weight: bold;
-            text-shadow: 3px 3px 6px black;
-            padding: 15px;
-            border-radius: 10px;
-            display: inline-block;
-            margin-top: 20px;
-            color: #FFD700;
-            position: relative;
-        }
-        #result:empty::before {
-            content: "\2728 今日の運勢を占ってみよう！ \2728";
-            display: block;
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-            color: #ffffcc;
-            animation: blink 2s infinite;
-        }
-        .loading {
-            font-size: 1.6rem;
-            color: #FFD700;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        .result-img {
-            max-width: 90%;
-            width: 720px;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
-        }
-        .fade-in {
-            opacity: 1 !important;
-            transform: scale(1) !important;
-        }
-        .star {
-            position: absolute;
-            background: radial-gradient(circle at 30% 30%, #fffacd, #ffd700, #ff8c00);
-            clip-path: polygon(50% 0%, 60% 35%, 100% 35%, 68% 58%, 78% 100%, 50% 75%, 22% 100%, 32% 58%, 0% 35%, 40% 35%);
-            opacity: 0.85;
-            animation: drift linear infinite, pulse 3.5s infinite ease-in-out;
-        }
-        @keyframes drift {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-200vw, 200vh) rotate(720deg); }
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.8); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>聖星☆みくじ</title>
+  <style>
+    body {
+      text-align: center;
+      color: white;
+      font-family: 'Kosugi Maru', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(to right, #87CEFA 0%, #FF6347 100%);
+      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+      background-blend-mode: overlay;
+      animation: rotateBackground 60s linear infinite;
+      transform-origin: center;
+      transition: background 4s ease-in-out;
+    }
+
+    body.night::before {
+      background: radial-gradient(circle, rgba(25, 25, 112, 0.9) 0%, rgba(0, 0, 40, 0.95) 100%);
+    }
+
+    @keyframes rotateBackground {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-size: 5rem;
+      text-shadow: 3px 3px 0px black, 5px 5px 15px rgba(255, 255, 255, 0.7);
+      color: #FFF8DC;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+    }
+
+    button {
+      background: linear-gradient(145deg, #FFD700, #FF8C00);
+      border: 2px solid #FFA500;
+      padding: 18px 36px;
+      font-size: 1.8rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+      color: white;
+      font-weight: bold;
+      text-shadow: 2px 2px 3px black;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 50px rgba(255, 215, 0, 0.9);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    button:disabled {
+      background: silver;
+      cursor: not-allowed;
+    }
+
+    #result {
+      font-size: 2rem;
+      font-weight: bold;
+      text-shadow: 3px 3px 6px black;
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 20px;
+      color: #FFD700;
+      position: relative;
+    }
+
+    #result:empty::before {
+      content: "\2728 今日の運勢を占ってみよう！ \2728";
+      display: block;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      color: #ffffcc;
+      animation: blink 2s infinite;
+    }
+
+    .loading {
+      font-size: 1.6rem;
+      color: #FFD700;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .result-img {
+      max-width: 90%;
+      width: 720px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    .fade-in {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+    }
+
+    .star {
+      position: absolute;
+      background: radial-gradient(circle at 30% 30%, #fffacd, #ffd700, #ff8c00);
+      clip-path: polygon(50% 0%, 60% 35%, 100% 35%, 68% 58%, 78% 100%, 50% 75%, 22% 100%, 32% 58%, 0% 35%, 40% 35%);
+      opacity: 0.85;
+      animation: drift linear infinite, pulse 3.5s infinite ease-in-out;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-200vw, 200vh) rotate(720deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.8); }
+    }
+  </style>
 </head>
 <body>
-    <h1>聖星☆みくじ</h1>
-    <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
-    <div id="result"></div>
+  <h1>聖星☆みくじ</h1>
+  <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
+  <div id="result"></div>
 
-    <script>
-        const startTime = Date.now();
+  <script>
+    const startTime = Date.now();
 
-        async function loadImage(src) {
-            return new Promise(resolve => {
-                const img = new Image();
-                img.classList.add("result-img");
-                img.onload = () => resolve(img);
-                img.onerror = () => {
-                    img.src = './docs/default.png';
-                    img.onload = () => resolve(img);
-                };
-                img.src = src;
-            });
-        }
+    async function loadImage(src) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.classList.add("result-img");
+        img.onload = () => resolve(img);
+        img.onerror = () => {
+          img.src = './docs/default.png';
+          img.onload = () => resolve(img);
+        };
+        img.src = src;
+      });
+    }
 
-        async function drawLottery() {
-            const button = document.getElementById("drawButton");
-            const resultDiv = document.getElementById("result");
-            button.disabled = true;
-            resultDiv.innerHTML = '<span class="loading">星を観測中...</span>';
-            await new Promise(resolve => setTimeout(resolve, 1000));
+    async function drawLottery() {
+      const button = document.getElementById("drawButton");
+      const resultDiv = document.getElementById("result");
+      button.disabled = true;
+      resultDiv.innerHTML = '<span class="loading">星を観測中...</span>';
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const maxNumber = parseInt(button.getAttribute("data-max"), 10) || 20;
-            const number = Math.floor(Math.random() * maxNumber) + 1;
-            try {
-                const img = await loadImage(`./docs/${number}.png`);
-                resultDiv.innerHTML = "";
-                img.classList.add("fade-in");
-                resultDiv.appendChild(img);
-            } catch (e) {
-                resultDiv.textContent = "画像の読み込みに失敗しました。";
-            }
-            setTimeout(() => button.disabled = false, 800);
-        }
+      const maxNumber = parseInt(button.getAttribute("data-max"), 10) || 20;
+      const number = Math.floor(Math.random() * maxNumber) + 1;
+      try {
+        const img = await loadImage(`./docs/${number}.png`);
+        resultDiv.innerHTML = "";
+        img.classList.add("fade-in");
+        resultDiv.appendChild(img);
+      } catch (e) {
+        resultDiv.textContent = "画像の読み込みに失敗しました。";
+      }
+      setTimeout(() => button.disabled = false, 800);
+    }
 
-        function createStars(count) {
-            for (let i = 0; i < count; i++) {
-                const star = document.createElement("div");
-                star.classList.add("star");
-                const size = Math.random() * 15 + 10;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = Math.random() * 100 + "vw";
-                star.style.top = Math.random() * 100 + "vh";
-                document.body.appendChild(star);
-            }
-        }
+    function createStars(count) {
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement("div");
+        star.classList.add("star");
+        const size = Math.random() * 15 + 10;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = Math.random() * 100 + "vw";
+        star.style.top = Math.random() * 100 + "vh";
+        document.body.appendChild(star);
+      }
+    }
 
-        function updateStarSpeed() {
-            const elapsed = (Date.now() - startTime) / 1000;
-            const speed = 6.5 + 3.5 * Math.sin(elapsed / 8);
-            document.querySelectorAll('.star').forEach(star => {
-                star.style.animationDuration = `${speed.toFixed(2)}s`;
-            });
-        }
+    function updateStarSpeed() {
+      const elapsed = (Date.now() - startTime) / 1000;
+      const speed = 6.5 + 3.5 * Math.sin(elapsed / 8);
+      document.querySelectorAll('.star').forEach(star => {
+        star.style.animationDuration = `${speed.toFixed(2)}s`;
+      });
+    }
 
-        createStars(40);
-        setInterval(updateStarSpeed, 200);
-    </script>
+    // 5秒後に夜に切り替え、星を生成
+    setTimeout(() => {
+      document.body.classList.add("night");
+      createStars(40);
+      setInterval(updateStarSpeed, 200);
+    }, 5000);
+  </script>
 </body>
 </html>
