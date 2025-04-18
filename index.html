@@ -10,35 +10,30 @@
       color: white;
       font-family: 'Kosugi Maru', sans-serif;
       height: 100vh;
+      margin: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      position: relative;
       overflow: hidden;
+      position: relative;
     }
 
     body::before {
       content: "";
-      position: absolute;
-      inset: 0;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: -2;
-      background: linear-gradient(to right, #87CEFA 0%, #FF6347 100%);
-      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-      background-blend-mode: overlay;
-      animation: rotateBackground 60s linear infinite;
-      transform-origin: center;
-      transition: background 4s ease-in-out;
+      background-image: linear-gradient(to right, #87CEFA 0%, #FF6347 100%);
+      background-repeat: no-repeat;
+      background-size: cover;
+      transition: background-image 4s ease-in-out;
     }
 
     body.night::before {
-      background: radial-gradient(circle, rgba(25, 25, 112, 0.9) 0%, rgba(0, 0, 40, 0.95) 100%);
-    }
-
-    @keyframes rotateBackground {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      background-image: radial-gradient(circle, rgba(25, 25, 112, 0.9) 0%, rgba(0, 0, 40, 0.95) 100%);
     }
 
     h1 {
@@ -206,7 +201,7 @@
       });
     }
 
-    // 5秒後に夜に切り替え、星を生成
+    // 5秒後に夜に切り替え、星を出す
     setTimeout(() => {
       document.body.classList.add("night");
       createStars(40);
