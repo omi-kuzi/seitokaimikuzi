@@ -5,35 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>聖星☆みくじ</title>
   <style>
-    body {
-      text-align: center;
-      color: white;
-      font-family: 'Kosugi Maru', sans-serif;
-      height: 100vh;
+    html, body {
       margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      padding: 0;
+      height: 100%;
       overflow: hidden;
-      position: relative;
+      font-family: 'Kosugi Maru', sans-serif;
+      color: white;
+      text-align: center;
     }
 
-    body::before {
-      content: "";
+    /* 背景レイヤー共通 */
+    .bg-layer {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: -2;
-      background-image: linear-gradient(to right, #87CEFA 0%, #FF6347 100%);
-      background-repeat: no-repeat;
       background-size: cover;
-      transition: background-image 4s ease-in-out;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: opacity 4s ease-in-out;
+      z-index: -3;
+      opacity: 1;
     }
 
-    body.night::before {
-      background-image: radial-gradient(circle, rgba(25, 25, 112, 0.9) 0%, rgba(0, 0, 40, 0.95) 100%);
+    #bg-day {
+      background: linear-gradient(to right, #87CEFA 0%, #FF6347 100%);
+    }
+
+    #bg-night {
+      background: radial-gradient(circle, rgba(25, 25, 112, 0.9) 0%, rgba(0, 0, 40, 0.95) 100%);
+      opacity: 0;
+    }
+
+    body.night #bg-night {
+      opacity: 1;
     }
 
     h1 {
@@ -43,6 +49,7 @@
       padding: 20px;
       background: rgba(0, 0, 0, 0.4);
       border-radius: 15px;
+      z-index: 1;
     }
 
     button {
@@ -56,6 +63,7 @@
       color: white;
       font-weight: bold;
       text-shadow: 2px 2px 3px black;
+      z-index: 1;
     }
 
     button:hover {
@@ -78,10 +86,10 @@
       text-shadow: 3px 3px 6px black;
       padding: 15px;
       border-radius: 10px;
-      display: inline-block;
       margin-top: 20px;
       color: #FFD700;
       position: relative;
+      z-index: 1;
     }
 
     #result:empty::before {
@@ -126,6 +134,7 @@
       clip-path: polygon(50% 0%, 60% 35%, 100% 35%, 68% 58%, 78% 100%, 50% 75%, 22% 100%, 32% 58%, 0% 35%, 40% 35%);
       opacity: 0.85;
       animation: drift linear infinite, pulse 3.5s infinite ease-in-out;
+      z-index: -1;
     }
 
     @keyframes drift {
@@ -137,9 +146,14 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.8); }
     }
+
   </style>
 </head>
 <body>
+  <!-- 背景レイヤー -->
+  <div id="bg-day" class="bg-layer"></div>
+  <div id="bg-night" class="bg-layer"></div>
+
   <h1>聖星☆みくじ</h1>
   <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
   <div id="result"></div>
