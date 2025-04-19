@@ -11,8 +11,8 @@
       color: white;
       font-family: "Times New Roman", serif;
       margin: 0;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -25,12 +25,31 @@
       background: linear-gradient(to bottom, #020111 0%, #191621 100%);
     }
 
+    .moon {
+      position: fixed;
+      top: 50px;
+      right: 100px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+      box-shadow: 0 0 20px #fff;
+      z-index: 1;
+      display: none;
+    }
+
     h1 {
       font-size: 4.5rem;
       text-shadow: 5px 5px 0px black, 7px 7px 15px rgba(255, 255, 255, 0.8);
       color: #FFD700;
       padding: 15px;
       text-align: center;
+      animation: fadeInTitle 2s ease-out;
+    }
+
+    @keyframes fadeInTitle {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     button {
@@ -44,6 +63,12 @@
       color: white;
       font-weight: bold;
       text-shadow: 2px 2px 3px black;
+      animation: pulseButton 2s infinite;
+    }
+
+    @keyframes pulseButton {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     button:hover {
@@ -88,25 +113,12 @@
       transform: scale(1) !important;
     }
 
-    .meteor {
-      position: absolute;
-      width: 4px;
-      height: 80px;
-      background: linear-gradient(to bottom left, rgba(255,255,255,0.8), transparent);
-      opacity: 0.8;
-      transform: rotate(135deg);
-      animation: meteor-fall linear;
-    }
-
-    @keyframes meteor-fall {
-      0% {
-        transform: translate(0, 0) rotate(135deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-200vw, 200vh) rotate(135deg);
-        opacity: 0;
-      }
+    #history {
+      margin-top: 30px;
+      font-size: 1.2rem;
+      color: #ffffff;
+      max-width: 90%;
+      text-align: center;
     }
   </style>
 </head>
@@ -114,6 +126,8 @@
   <h1>聖星☆みくじ</h1>
   <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
   <div id="result"></div>
+  <div id="history"></div>
+  <div class="moon" id="moon"></div>
 
   <script>
     async function loadImage(src) {
@@ -129,9 +143,12 @@
       });
     }
 
+    const historyLog = [];
+
     async function drawLottery() {
       const button = document.getElementById("drawButton");
       const resultDiv = document.getElementById("result");
+      const historyDiv = document.getElementById("history");
       button.disabled = true;
       resultDiv.innerHTML = '<span class="loading">星を観測中...</span>';
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -144,36 +161,21 @@
         resultDiv.innerHTML = "";
         img.classList.add("fade-in");
         resultDiv.appendChild(img);
+
+        const date = new Date().toLocaleString();
+        historyLog.unshift(`${date}：${number}番を引きました`);
+        historyDiv.innerHTML = historyLog.slice(0, 5).join("<br>");
       } catch (e) {
         resultDiv.textContent = "画像の読み込みに失敗しました。";
       }
       setTimeout(() => button.disabled = false, 800);
     }
 
-    function createMeteor() {
-      const meteor = document.createElement("div");
-      meteor.classList.add("meteor");
-
-      meteor.style.left = Math.random() * window.innerWidth + "px";
-      meteor.style.top = Math.random() * -200 + "px";
-      meteor.style.animationDuration = (Math.random() * 2 + 1) + "s";
-
-      document.body.appendChild(meteor);
-
-      setTimeout(() => {
-        meteor.remove();
-      }, 3000);
-    }
-
-    // 流れ星を定期的に生成
-    setInterval(() => {
-      for (let i = 0; i < 3; i++) createMeteor();
-    }, 800);
-
-    // Bキー押下で背景切り替え（夜）
     window.addEventListener("keydown", e => {
-      if (e.key.toLowerCase() === "b") {
+      if (e.key.toLowerCase() === "n") {
         document.body.classList.toggle("night");
+        const moon = document.getElementById("moon");
+        moon.style.display = moon.style.display === "block" ? "none" : "block";
       }
     });
   </script>
