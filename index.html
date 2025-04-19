@@ -1,226 +1,194 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>聖星☆みくじ</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Kosugi Maru', sans-serif;
-      color: white;
-      text-align: center;
-    }
-
-    /* 背景レイヤー共通 */
-    .bg-layer {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      transition: opacity 4s ease-in-out;
-      z-index: -3;
-      opacity: 1;
-    }
-
-    #bg-day {
-      background: linear-gradient(to right, #87CEFA 0%, #FF6347 100%);
-    }
-
-    #bg-night {
-      background: radial-gradient(circle, rgba(25, 25, 112, 0.9) 0%, rgba(0, 0, 40, 0.95) 100%);
-      opacity: 0;
-    }
-
-    body.night #bg-night {
-      opacity: 1;
-    }
-
-    h1 {
-      font-size: 5rem;
-      text-shadow: 3px 3px 0px black, 5px 5px 15px rgba(255, 255, 255, 0.7);
-      color: #FFF8DC;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 15px;
-      z-index: 1;
-    }
-
-    button {
-      background: linear-gradient(145deg, #FFD700, #FF8C00);
-      border: 2px solid #FFA500;
-      padding: 18px 36px;
-      font-size: 1.8rem;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.3s;
-      color: white;
-      font-weight: bold;
-      text-shadow: 2px 2px 3px black;
-      z-index: 1;
-    }
-
-    button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 50px rgba(255, 215, 0, 0.9);
-    }
-
-    button:active {
-      transform: scale(0.95);
-    }
-
-    button:disabled {
-      background: silver;
-      cursor: not-allowed;
-    }
-
-    #result {
-      font-size: 2rem;
-      font-weight: bold;
-      text-shadow: 3px 3px 6px black;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 20px;
-      color: #FFD700;
-      position: relative;
-      z-index: 1;
-    }
-
-    #result:empty::before {
-      content: "\2728 今日の運勢を占ってみよう！ \2728";
-      display: block;
-      font-size: 1.6rem;
-      margin-bottom: 10px;
-      color: #ffffcc;
-      animation: blink 2s infinite;
-    }
-
-    .loading {
-      font-size: 1.6rem;
-      color: #FFD700;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .result-img {
-      max-width: 90%;
-      width: 720px;
-      height: auto;
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-      opacity: 0;
-      transform: scale(0.95);
-      transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
-    }
-
-    .fade-in {
-      opacity: 1 !important;
-      transform: scale(1) !important;
-    }
-
-    .star {
-      position: absolute;
-      background: radial-gradient(circle at 30% 30%, #fffacd, #ffd700, #ff8c00);
-      clip-path: polygon(50% 0%, 60% 35%, 100% 35%, 68% 58%, 78% 100%, 50% 75%, 22% 100%, 32% 58%, 0% 35%, 40% 35%);
-      opacity: 0.85;
-      animation: drift linear infinite, pulse 3.5s infinite ease-in-out;
-      z-index: -1;
-    }
-
-    @keyframes drift {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      100% { transform: translate(-200vw, 200vh) rotate(720deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.8); }
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聖星☆みくじ</title>
+    <style>
+        body {
+            background: radial-gradient(circle at center, rgba(255, 69, 0, 0.9) 0%, rgba(139, 0, 0, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
+            text-align: center;
+            color: white;
+            font-family: "Times New Roman", serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 4.5rem;
+            text-shadow: 5px 5px 0px black, 7px 7px 15px rgba(255, 255, 255, 0.8);
+            color: #FFD700;
+            padding: 15px;
+        }
+        button {
+            background: linear-gradient(145deg, #FF4500, #B22222);
+            border: 2px solid #8B0000;
+            padding: 15px 30px;
+            font-size: 1.8rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 3px black;
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(255, 69, 0, 1);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        button:disabled {
+            background: silver;
+            cursor: not-allowed;
+        }
+        #result {
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px black;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+            color: #FFD700;
+            position: relative;
+        }
+        #result:empty::before {
+            content: "✨ 今日の運勢を占ってみよう！ ✨";
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #ffa;
+            animation: blink 2s infinite;
+        }
+        .loading {
+            font-size: 1.5rem;
+            color: #FFD700;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .result-img {
+            max-width: 90%;
+            width: 800px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .fade-in {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+            animation: glow 1.5s ease-in-out;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px 2px rgba(255, 255, 150, 0.5); }
+            50% { box-shadow: 0 0 20px 10px rgba(255, 255, 200, 1); }
+            100% { box-shadow: 0 0 10px 2px rgba(255, 255, 150, 0.5); }
+        }
+        .star {
+            position: absolute;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            opacity: 0;
+            animation: starFlow 8s linear forwards;
+            pointer-events: none;
+            filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+        }
+        @keyframes starFlow {
+            0% {
+                transform: translate(0, 0) scale(0.5) rotate(0deg);
+                opacity: 0;
+                box-shadow: 0 0 0px rgba(255, 255, 255, 0.1);
+            }
+            10% {
+                opacity: 1;
+                box-shadow: 0 0 12px rgba(255, 255, 180, 0.6);
+            }
+            90% {
+                opacity: 1;
+                box-shadow: 0 0 20px rgba(255, 255, 180, 0.9);
+            }
+            100% {
+                transform: translate(-200vw, 200vh) scale(1.2) rotate(720deg);
+                opacity: 0;
+                box-shadow: 0 0 0px rgba(255, 255, 255, 0);
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- 背景レイヤー -->
-  <div id="bg-day" class="bg-layer"></div>
-  <div id="bg-night" class="bg-layer"></div>
+    <h1>聖星☆みくじ</h1>
+    <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
+    <div id="result"></div>
 
-  <h1>聖星☆みくじ</h1>
-  <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
-  <div id="result"></div>
+    <script>
+        async function loadImage(src) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.classList.add("result-img");
+                img.onload = () => resolve(img);
+                img.onerror = () => {
+                    img.src = './docs/default.png';
+                    img.onload = () => resolve(img);
+                };
+                img.src = src;
+            });
+        }
 
-  <script>
-    const startTime = Date.now();
+        async function drawLottery() {
+            const button = document.getElementById("drawButton");
+            const resultDiv = document.getElementById("result");
+            button.disabled = true;
+            resultDiv.innerHTML = '<span class="loading">星を観測中...</span>';
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-    async function loadImage(src) {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.classList.add("result-img");
-        img.onload = () => resolve(img);
-        img.onerror = () => {
-          img.src = './docs/default.png';
-          img.onload = () => resolve(img);
-        };
-        img.src = src;
-      });
-    }
+            const maxNumber = parseInt(button.getAttribute("data-max"), 10) || 20;
+            const number = Math.floor(Math.random() * maxNumber) + 1;
+            try {
+                const img = await loadImage(`./docs/${number}.png`);
+                resultDiv.innerHTML = "";
+                img.classList.add("fade-in");
+                resultDiv.appendChild(img);
+            } catch (e) {
+                resultDiv.textContent = "画像の読み込みに失敗しました。";
+            }
+            setTimeout(() => button.disabled = false, 800);
+        }
 
-    async function drawLottery() {
-      const button = document.getElementById("drawButton");
-      const resultDiv = document.getElementById("result");
-      button.disabled = true;
-      resultDiv.innerHTML = '<span class="loading">星を観測中...</span>';
-      await new Promise(resolve => setTimeout(resolve, 1000));
+        function createStars(count) {
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement("div");
+                star.classList.add("star");
 
-      const maxNumber = parseInt(button.getAttribute("data-max"), 10) || 20;
-      const number = Math.floor(Math.random() * maxNumber) + 1;
-      try {
-        const img = await loadImage(`./docs/${number}.png`);
-        resultDiv.innerHTML = "";
-        img.classList.add("fade-in");
-        resultDiv.appendChild(img);
-      } catch (e) {
-        resultDiv.textContent = "画像の読み込みに失敗しました。";
-      }
-      setTimeout(() => button.disabled = false, 800);
-    }
+                const size = Math.random() * 12 + 8;
+                const hue = Math.floor(Math.random() * 40 + 40);
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.background = `hsl(${hue}, 100%, 70%)`;
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.animationDuration = `${Math.random() * 4 + 6}s`;
 
-    function createStars(count) {
-      for (let i = 0; i < count; i++) {
-        const star = document.createElement("div");
-        star.classList.add("star");
-        const size = Math.random() * 15 + 10;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-        star.style.left = Math.random() * 100 + "vw";
-        star.style.top = Math.random() * 100 + "vh";
-        document.body.appendChild(star);
-      }
-    }
+                document.body.appendChild(star);
+                star.addEventListener("animationend", () => {
+                    star.remove();
+                });
+            }
 
-    function updateStarSpeed() {
-      const elapsed = (Date.now() - startTime) / 1000;
-      const speed = 6.5 + 3.5 * Math.sin(elapsed / 8);
-      document.querySelectorAll('.star').forEach(star => {
-        star.style.animationDuration = `${speed.toFixed(2)}s`;
-      });
-    }
+            setTimeout(() => createStars(count), 2000);
+        }
 
-    // 5秒後に夜に切り替え、星を出す
-    setTimeout(() => {
-      document.body.classList.add("night");
-      createStars(40);
-      setInterval(updateStarSpeed, 200);
-    }, 5000);
-  </script>
+        createStars(30);
+    </script>
 </body>
 </html>
