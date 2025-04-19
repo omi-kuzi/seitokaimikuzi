@@ -2,131 +2,178 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>聖星☆みくじ</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-    }
     body {
-      background: radial-gradient(circle, rgba(255, 69, 0, 0.9) 0%, rgba(139, 0, 0, 0.9) 100%);
+      background: radial-gradient(circle, rgba(255, 69, 0, 0.9) 0%, rgba(139, 0, 0, 0.9) 100%), 
+                  url('https://www.transparenttextures.com/patterns/stardust.png');
       color: white;
       font-family: "Times New Roman", serif;
-      text-align: center;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      transition: background 1.5s ease-in-out;
+      padding: 20px;
+      transition: background 1s ease-in-out;
     }
-    body.night-mode {
-      background: radial-gradient(circle, rgba(10, 10, 40, 1) 0%, rgba(0, 0, 0, 1) 100%);
+
+    body.night {
+      background: linear-gradient(to bottom, #020111 0%, #191621 100%);
     }
 
     h1 {
-      font-size: 4rem;
+      font-size: 4.5rem;
+      text-shadow: 5px 5px 0px black, 7px 7px 15px rgba(255, 255, 255, 0.8);
       color: #FFD700;
-      text-shadow: 4px 4px 8px black;
+      padding: 15px;
+      text-align: center;
     }
 
     button {
-      padding: 15px 30px;
-      font-size: 1.5rem;
       background: linear-gradient(145deg, #FF4500, #B22222);
       border: 2px solid #8B0000;
-      color: white;
+      padding: 15px 30px;
+      font-size: 1.8rem;
       border-radius: 10px;
       cursor: pointer;
-      text-shadow: 2px 2px 3px black;
       transition: transform 0.2s, box-shadow 0.3s;
+      color: white;
+      font-weight: bold;
+      text-shadow: 2px 2px 3px black;
     }
 
     button:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 20px rgba(255, 69, 0, 1);
+      box-shadow: 0 0 40px rgba(255, 69, 0, 1);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    button:disabled {
+      background: silver;
+      cursor: not-allowed;
     }
 
     #result {
+      font-size: 2rem;
+      font-weight: bold;
+      text-shadow: 3px 3px 6px black;
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-block;
       margin-top: 20px;
-      font-size: 1.5rem;
       color: #FFD700;
+      position: relative;
     }
 
-    .shooting-star {
+    .result-img {
+      max-width: 90%;
+      width: 800px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    .fade-in {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+    }
+
+    .meteor {
       position: absolute;
-      width: 3px;
-      height: 100px;
-      background: linear-gradient(45deg, white, lightblue, transparent);
-      border-radius: 50%;
+      width: 4px;
+      height: 80px;
+      background: linear-gradient(to bottom left, rgba(255,255,255,0.8), transparent);
       opacity: 0.8;
-      pointer-events: none;
-      transform: rotate(-45deg);
-      animation: shooting 2s linear forwards;
+      transform: rotate(135deg);
+      animation: meteor-fall linear;
     }
 
-    body.night-mode .shooting-star {
-      background: linear-gradient(45deg, white, #99ccff, transparent);
-    }
-
-    @keyframes shooting {
+    @keyframes meteor-fall {
       0% {
-        transform: translate(0, 0) rotate(-45deg);
+        transform: translate(0, 0) rotate(135deg);
         opacity: 1;
       }
       100% {
-        transform: translate(-200vw, 200vh) rotate(-45deg);
+        transform: translate(-200vw, 200vh) rotate(135deg);
         opacity: 0;
       }
     }
-
   </style>
 </head>
 <body>
   <h1>聖星☆みくじ</h1>
-  <button onclick="drawLottery()">くじを引く</button>
+  <button id="drawButton" data-max="20" onclick="drawLottery()">くじを引く</button>
   <div id="result"></div>
 
   <script>
-    function drawLottery() {
-      const result = document.getElementById('result');
-      result.innerHTML = '';
-      const text = document.createElement('div');
-      text.textContent = "✨大吉！✨";
-      text.style.fontSize = "2rem";
-      text.style.textShadow = "2px 2px 8px gold";
-      text.style.animation = "pulse 1s infinite alternate";
-      result.appendChild(text);
+    async function loadImage(src) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.classList.add("result-img");
+        img.onload = () => resolve(img);
+        img.onerror = () => {
+          img.src = './docs/default.png';
+          img.onload = () => resolve(img);
+        };
+        img.src = src;
+      });
+    }
 
-      // 星のエフェクト
-      for (let i = 0; i < 5; i++) {
-        setTimeout(createShootingStar, i * 300);
+    async function drawLottery() {
+      const button = document.getElementById("drawButton");
+      const resultDiv = document.getElementById("result");
+      button.disabled = true;
+      resultDiv.innerHTML = '<span class="loading">星を観測中...</span>';
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const maxNumber = parseInt(button.getAttribute("data-max"), 10) || 20;
+      const number = Math.floor(Math.random() * maxNumber) + 1;
+
+      try {
+        const img = await loadImage(`./docs/${number}.png`);
+        resultDiv.innerHTML = "";
+        img.classList.add("fade-in");
+        resultDiv.appendChild(img);
+      } catch (e) {
+        resultDiv.textContent = "画像の読み込みに失敗しました。";
       }
+      setTimeout(() => button.disabled = false, 800);
     }
 
-    // 流れ星生成（君の名は。風）
-    function createShootingStar() {
-      const star = document.createElement('div');
-      star.classList.add('shooting-star');
-      star.style.left = Math.random() * window.innerWidth + 'px';
-      star.style.top = Math.random() * window.innerHeight * 0.5 + 'px';
-      document.body.appendChild(star);
+    function createMeteor() {
+      const meteor = document.createElement("div");
+      meteor.classList.add("meteor");
+
+      meteor.style.left = Math.random() * window.innerWidth + "px";
+      meteor.style.top = Math.random() * -200 + "px";
+      meteor.style.animationDuration = (Math.random() * 2 + 1) + "s";
+
+      document.body.appendChild(meteor);
+
       setTimeout(() => {
-        star.remove();
-      }, 2000);
+        meteor.remove();
+      }, 3000);
     }
 
-    // 常時流れる星（彗星のように）
+    // 流れ星を定期的に生成
     setInterval(() => {
-      createShootingStar();
-    }, 1000); // 数を増やすには間隔を短くする
+      for (let i = 0; i < 3; i++) createMeteor();
+    }, 800);
 
-    // Nキーで夜モード切り替え
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "n" || e.key === "N") {
-        document.body.classList.toggle("night-mode");
+    // Bキー押下で背景切り替え（夜）
+    window.addEventListener("keydown", e => {
+      if (e.key.toLowerCase() === "b") {
+        document.body.classList.toggle("night");
       }
     });
   </script>
