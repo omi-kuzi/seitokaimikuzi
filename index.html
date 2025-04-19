@@ -6,7 +6,7 @@
     <title>聖星☆みくじ</title>
     <style>
         body {
-            background: radial-gradient(circle at center, rgba(255, 69, 0, 0.9) 0%, rgba(139, 0, 0, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
+            background: radial-gradient(circle at center, rgba(10, 10, 30, 1) 0%, rgba(0, 0, 10, 1) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
             text-align: center;
             color: white;
             font-family: "Times New Roman", serif;
@@ -81,47 +81,43 @@
             width: 800px;
             height: auto;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
+            box-shadow: 0 0 30px rgba(255, 255, 150, 0.9);
             opacity: 0;
             transform: scale(0.95);
-            transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
+            transition: opacity 1s ease-in-out, transform 0.8s ease-in-out;
         }
         .fade-in {
             opacity: 1 !important;
             transform: scale(1) !important;
-            animation: glow 1.5s ease-in-out;
-        }
-        @keyframes glow {
-            0% { box-shadow: 0 0 10px 2px rgba(255, 255, 150, 0.5); }
-            50% { box-shadow: 0 0 20px 10px rgba(255, 255, 200, 1); }
-            100% { box-shadow: 0 0 10px 2px rgba(255, 255, 150, 0.5); }
         }
         .star {
             position: absolute;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            opacity: 0;
-            animation: starFlow 8s linear forwards;
-            pointer-events: none;
-            filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: radial-gradient(circle, white 0%, gold 60%, transparent 100%);
+            opacity: 0.9;
+            filter: blur(0.8px);
+            animation: drift linear infinite;
         }
-        @keyframes starFlow {
+        .tail {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 6px;
+            background: linear-gradient(to left, rgba(255, 255, 200, 0.7), transparent);
+            border-radius: 50%;
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        @keyframes drift {
             0% {
-                transform: translate(0, 0) scale(0.5) rotate(0deg);
-                opacity: 0;
-                box-shadow: 0 0 0px rgba(255, 255, 255, 0.1);
-            }
-            10% {
+                transform: translate(0, 0) rotate(0deg);
                 opacity: 1;
-                box-shadow: 0 0 12px rgba(255, 255, 180, 0.6);
-            }
-            90% {
-                opacity: 1;
-                box-shadow: 0 0 20px rgba(255, 255, 180, 0.9);
             }
             100% {
-                transform: translate(-200vw, 200vh) scale(1.2) rotate(720deg);
+                transform: translate(-200vw, 200vh) rotate(720deg);
                 opacity: 0;
-                box-shadow: 0 0 0px rgba(255, 255, 255, 0);
             }
         }
     </style>
@@ -168,27 +164,19 @@
         function createStars(count) {
             for (let i = 0; i < count; i++) {
                 const star = document.createElement("div");
+                const tail = document.createElement("div");
                 star.classList.add("star");
-
-                const size = Math.random() * 12 + 8;
-                const hue = Math.floor(Math.random() * 40 + 40);
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.background = `hsl(${hue}, 100%, 70%)`;
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.top = `${Math.random() * 100}vh`;
-                star.style.animationDuration = `${Math.random() * 4 + 6}s`;
-
+                tail.classList.add("tail");
+                star.style.left = Math.random() * 100 + "vw";
+                star.style.top = Math.random() * 100 + "vh";
+                star.style.animationDuration = (Math.random() * 6 + 4) + "s";
+                star.style.zIndex = 0;
+                star.appendChild(tail);
                 document.body.appendChild(star);
-                star.addEventListener("animationend", () => {
-                    star.remove();
-                });
             }
-
-            setTimeout(() => createStars(count), 2000);
         }
 
-        createStars(30);
+        createStars(80); // 星の数を増加
     </script>
 </body>
 </html>
