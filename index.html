@@ -6,7 +6,7 @@
     <title>聖星☆みくじ</title>
     <style>
         body {
-            background: radial-gradient(circle at center, rgba(10, 10, 30, 1) 0%, rgba(0, 0, 10, 1) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
+            background: radial-gradient(circle, rgba(255, 69, 0, 0.9) 0%, rgba(139, 0, 0, 0.9) 100%), url('https://www.transparenttextures.com/patterns/stardust.png');
             text-align: center;
             color: white;
             font-family: "Times New Roman", serif;
@@ -81,42 +81,40 @@
             width: 800px;
             height: auto;
             border-radius: 10px;
-            box-shadow: 0 0 30px rgba(255, 255, 150, 0.9);
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
             opacity: 0;
             transform: scale(0.95);
-            transition: opacity 1s ease-in-out, transform 0.8s ease-in-out;
+            transition: opacity 0.8s ease-in-out, transform 0.5s ease-in-out;
         }
         .fade-in {
             opacity: 1 !important;
             transform: scale(1) !important;
+            animation: glowEffect 1.5s ease-in-out forwards;
         }
-        .star {
+        @keyframes glowEffect {
+            0% { filter: drop-shadow(0 0 0px #FFD700); }
+            100% { filter: drop-shadow(0 0 15px #FFD700); }
+        }
+        .comet {
             position: absolute;
             width: 6px;
             height: 6px;
+            background: white;
             border-radius: 50%;
-            background: radial-gradient(circle, white 0%, gold 60%, transparent 100%);
-            opacity: 0.9;
-            filter: blur(0.8px);
-            animation: drift linear infinite;
+            box-shadow: -10px 0px 20px rgba(173, 216, 230, 0.5), -20px 0px 30px rgba(173, 216, 230, 0.3);
+            animation: cometMove linear infinite;
+            opacity: 0.8;
         }
-        .tail {
-            content: "";
-            position: absolute;
-            width: 40px;
-            height: 6px;
-            background: linear-gradient(to left, rgba(255, 255, 200, 0.7), transparent);
-            border-radius: 50%;
-            transform: rotate(45deg);
-            pointer-events: none;
-        }
-        @keyframes drift {
+        @keyframes cometMove {
             0% {
-                transform: translate(0, 0) rotate(0deg);
+                transform: translate(100vw, -20vh);
+                opacity: 0;
+            }
+            10% {
                 opacity: 1;
             }
             100% {
-                transform: translate(-200vw, 200vh) rotate(720deg);
+                transform: translate(-10vw, 120vh);
                 opacity: 0;
             }
         }
@@ -161,22 +159,22 @@
             setTimeout(() => button.disabled = false, 800);
         }
 
-        function createStars(count) {
+        function createComets(count) {
             for (let i = 0; i < count; i++) {
-                const star = document.createElement("div");
-                const tail = document.createElement("div");
-                star.classList.add("star");
-                tail.classList.add("tail");
-                star.style.left = Math.random() * 100 + "vw";
-                star.style.top = Math.random() * 100 + "vh";
-                star.style.animationDuration = (Math.random() * 6 + 4) + "s";
-                star.style.zIndex = 0;
-                star.appendChild(tail);
-                document.body.appendChild(star);
+                const comet = document.createElement("div");
+                comet.classList.add("comet");
+                const delay = Math.random() * 20;
+                const duration = Math.random() * 10 + 10;
+                comet.style.top = Math.random() * 100 + "vh";
+                comet.style.left = Math.random() * 100 + "vw";
+                comet.style.animationDuration = `${duration}s`;
+                comet.style.animationDelay = `${delay}s`;
+                comet.style.opacity = Math.random() * 0.6 + 0.4;
+                document.body.appendChild(comet);
             }
         }
 
-        createStars(80); // 星の数を増加
+        createComets(50);
     </script>
 </body>
 </html>
