@@ -11,13 +11,14 @@
             color: white;
             font-family: "Times New Roman", serif;
             height: 100vh;
+            margin: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative;
             overflow: hidden;
+            position: relative;
         }
         h1 {
             font-size: 4.5rem;
@@ -40,9 +41,6 @@
         button:hover {
             transform: scale(1.1);
             box-shadow: 0 0 40px rgba(255, 69, 0, 1);
-        }
-        button:active {
-            transform: scale(0.95);
         }
         button:disabled {
             background: silver;
@@ -89,32 +87,38 @@
         .fade-in {
             opacity: 1 !important;
             transform: scale(1) !important;
-            animation: glowEffect 1.5s ease-in-out forwards;
+            animation: glowEffect 1s ease-in-out forwards;
         }
+
         @keyframes glowEffect {
-            0% { filter: drop-shadow(0 0 0px #FFD700); }
-            100% { filter: drop-shadow(0 0 15px #FFD700); }
+            0% { box-shadow: 0 0 0px rgba(255,255,255,0); }
+            50% { box-shadow: 0 0 50px rgba(255,255,255,0.8); }
+            100% { box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); }
         }
-        .comet {
+
+        /* Shooting Star Style */
+        .shooting-star {
             position: absolute;
-            width: 6px;
-            height: 6px;
-            background: white;
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,0.8), rgba(255,255,255,0));
             border-radius: 50%;
-            box-shadow: -10px 0px 20px rgba(173, 216, 230, 0.5), -20px 0px 30px rgba(173, 216, 230, 0.3);
-            animation: cometMove linear infinite;
-            opacity: 0.8;
+            opacity: 0;
+            transform: rotate(-45deg);
+            animation: shoot 2s linear forwards;
+            pointer-events: none;
         }
-        @keyframes cometMove {
+
+        @keyframes shoot {
             0% {
-                transform: translate(100vw, -20vh);
-                opacity: 0;
+                transform: translate(100vw, -20vh) rotate(-45deg);
+                opacity: 1;
             }
-            10% {
+            70% {
                 opacity: 1;
             }
             100% {
-                transform: translate(-10vw, 120vh);
+                transform: translate(-10vw, 120vh) rotate(-45deg);
                 opacity: 0;
             }
         }
@@ -159,22 +163,27 @@
             setTimeout(() => button.disabled = false, 800);
         }
 
-        function createComets(count) {
-            for (let i = 0; i < count; i++) {
-                const comet = document.createElement("div");
-                comet.classList.add("comet");
-                const delay = Math.random() * 20;
-                const duration = Math.random() * 10 + 10;
-                comet.style.top = Math.random() * 100 + "vh";
-                comet.style.left = Math.random() * 100 + "vw";
-                comet.style.animationDuration = `${duration}s`;
-                comet.style.animationDelay = `${delay}s`;
-                comet.style.opacity = Math.random() * 0.6 + 0.4;
-                document.body.appendChild(comet);
-            }
+        // 流れ星を生成する関数
+        function createShootingStar() {
+            const star = document.createElement("div");
+            star.classList.add("shooting-star");
+
+            star.style.left = Math.random() * 100 + "vw";
+            star.style.top = Math.random() * 50 + "vh";
+
+            document.body.appendChild(star);
+
+            setTimeout(() => {
+                star.remove();
+            }, 2000);
         }
 
-        createComets(50);
+        // 定期的に流れ星を流す
+        setInterval(() => {
+            if (Math.random() < 0.8) {
+                createShootingStar();
+            }
+        }, 1000);
     </script>
 </body>
 </html>
